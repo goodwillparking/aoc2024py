@@ -1,4 +1,5 @@
 import re
+from collections import Counter
 
 from aoc2024.util import is_blank
 
@@ -12,4 +13,11 @@ with open("../resources/day_1.txt") as f:
     pairs = (parse_pair(line) for line in f if not is_blank(line))
     left, right = [sorted(n) for n in zip(*pairs)]
     diff = (abs(a - b) for a, b in zip(left, right))
-    print(sum(diff))
+    print(f"part 1: {sum(diff)}")
+
+with open("../resources/day_1.txt") as f:
+    pairs = (parse_pair(line) for line in f if not is_blank(line))
+    left, right = [n for n in zip(*pairs)]
+    counts = Counter(right)
+    similarity_score = (l * counts[l] for l in left)
+    print(f"part 2: {sum(similarity_score)}")
