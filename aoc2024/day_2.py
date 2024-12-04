@@ -2,6 +2,12 @@ from typing import List, Iterator
 
 from aoc2024.util import is_blank
 
+def part_1():
+    with open("../resources/day_2.txt") as f:
+        reports = (parse_report(line) for line in f if not is_blank(line))
+        sum = len(list(filter(is_safe, reports)))
+        print(f"Part 1: {sum}")
+
 def parse_report(s: str) -> List[int]:
     return [int(n) for n in s.split(" ")]
 
@@ -18,8 +24,22 @@ def has_small_gaps(l) -> bool:
 def diffs(l: List[int]) -> Iterator[int]:
     return (l[i + 1] - l[i] for i in range(0, len(l) - 1))
 
-# Part 1
-with open("../resources/day_2.txt") as f:
-    reports = (parse_report(line) for line in f if not is_blank(line))
-    sum = len(list(filter(is_safe, reports)))
-    print(f"Part 1: {sum}")
+def part_2():
+    with open("../resources/day_2.txt") as f:
+        reports = (parse_report(line) for line in f if not is_blank(line))
+        sum = len(list(filter(is_safe_with_damper, reports)))
+        print(f"Part 2: {sum}")
+
+def is_safe_with_damper(l: List[int]) -> bool:
+    negatives = sum(1 for n in diffs(l) if n < 0)
+    positives = len(l) - negatives
+    return has_small_gaps(l) if negatives == 0 or positives == 0 \
+        else any((is_safe(remove_at_index(l, i)) for i in range(0, len(l))))
+
+def remove_at_index[E](l: List[E], i: int) -> List[E]:
+    copy = l.copy()
+    copy.pop(i)
+    return copy
+
+part_1()
+part_2()
